@@ -1,0 +1,391 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fiche d'adhésion — PeopleSave</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Barlow:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --vert: #2E7D32;
+      --jaune: #F9A825;
+      --bleu: #1565C0;
+      --noir: #111111;
+      --blanc: #FAFAFA;
+      --gris: #F4F4F4;
+      --rouge: #C62828;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family: 'Barlow', sans-serif; background: var(--gris); color: var(--noir); }
+
+    .navbar-7mp { background: var(--noir); padding: 14px 0; border-bottom: 3px solid var(--jaune); position: sticky; top: 0; z-index: 1000; }
+    .nav-logo { height: 48px; }
+    .nav-title { font-family: 'Playfair Display', serif; color: #fff; font-size: 0.95rem; font-weight: 700; line-height: 1.2; }
+    .nav-title span { color: var(--jaune); }
+    .nav-link-back { color: #aaa !important; font-size: 0.85rem; text-decoration: none; display: flex; align-items: center; gap: 6px; transition: color 0.2s; }
+    .nav-link-back:hover { color: var(--jaune) !important; }
+
+    .page-header { background: linear-gradient(135deg, #0a1628 0%, #1b3a1b 100%); padding: 48px 0 32px; text-align: center; border-bottom: 4px solid var(--jaune); }
+    .page-header h1 { font-family: 'Playfair Display', serif; color: #fff; font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 900; margin-bottom: 8px; }
+    .page-header p { color: #a0c0a0; font-size: 0.95rem; }
+
+    .fiche-wrapper { max-width: 760px; margin: 40px auto; padding: 0 16px 60px; }
+    .fiche-card { background: #fff; box-shadow: 0 4px 32px rgba(0,0,0,0.12); border-top: 6px solid var(--vert); }
+
+    .fiche-header { display: flex; align-items: center; justify-content: space-between; padding: 24px 28px 20px; border-bottom: 2px solid #eee; gap: 12px; }
+    .fiche-logo-zone { display: flex; align-items: center; gap: 0; flex: 1; }
+    .fiche-logo-img { width: 110px; height: 110px; object-fit: contain; flex-shrink: 0; }
+    .fiche-org-title { text-align: center; flex: 1; }
+    .fiche-org-title h3 { font-family: 'Barlow', sans-serif; font-size: clamp(0.85rem, 2vw, 1rem); font-weight: 700; color: var(--noir); text-decoration: underline; margin-bottom: 10px; }
+    .fiche-org-title h2 { font-family: 'Barlow', sans-serif; font-size: clamp(1.3rem, 3vw, 1.9rem); font-weight: 900; color: var(--noir); margin-bottom: 0; }
+
+    .photo-zone { width: 120px; min-width: 100px; border: 2px solid #999; position: relative; cursor: pointer; background: #f9f9f9; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 140px; text-align: center; transition: border-color 0.2s; flex-shrink: 0; }
+    .photo-zone:hover { border-color: var(--vert); }
+    .photo-zone img { width: 100%; height: 140px; object-fit: cover; display: none; }
+    .photo-zone .photo-placeholder { padding: 10px; }
+    .photo-zone .photo-placeholder i { font-size: 1.8rem; color: #aaa; }
+    .photo-zone .photo-placeholder p { font-size: 0.7rem; color: #aaa; margin-top: 6px; line-height: 1.3; }
+    #photoInput { display: none; }
+
+    .fiche-section { padding: 24px 32px; border-bottom: 1px solid #eee; }
+    .fiche-section:last-child { border-bottom: none; }
+    .section-header { text-align: center; margin-bottom: 22px; }
+    .section-header h4 { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.15rem; font-weight: 700; color: var(--noir); text-decoration: underline; display: inline-block; padding: 0 16px; }
+
+    .field-group { margin-bottom: 18px; }
+    .field-group label { font-weight: 700; font-size: 0.92rem; color: var(--noir); display: block; margin-bottom: 4px; }
+    .field-group label .req { color: var(--rouge); margin-left: 2px; }
+    .field-input { width: 100%; border: none; border-bottom: 1.5px dashed #999; background: transparent; padding: 6px 2px; font-family: 'Barlow', sans-serif; font-size: 0.95rem; color: var(--noir); outline: none; transition: border-color 0.2s; }
+    .field-input:focus { border-bottom-color: var(--vert); border-bottom-style: solid; }
+    .field-input.is-invalid { border-bottom-color: var(--rouge); }
+    .field-error { font-size: 0.78rem; color: var(--rouge); margin-top: 3px; display: none; }
+    .field-input.is-invalid ~ .field-error { display: block; }
+    select.field-input { cursor: pointer; }
+
+    .fiche-signatures { display: flex; justify-content: space-between; align-items: flex-end; padding: 24px 32px 28px; border-top: 1px solid #eee; gap: 20px; flex-wrap: wrap; }
+    .signature-bloc { text-align: center; flex: 1; min-width: 160px; }
+    .signature-bloc .sig-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 40px; }
+    .signature-bloc .sig-line { border-top: 1.5px solid #999; margin: 0 20px; }
+    .signature-bloc .sig-sub { font-size: 0.78rem; color: #888; margin-top: 4px; }
+
+    .date-adh { padding: 16px 32px; background: var(--gris); }
+    .date-adh label { font-weight: 700; font-size: 0.92rem; }
+    .date-adh .field-input { max-width: 280px; }
+
+    .submit-zone { padding: 28px 32px; text-align: center; background: #fff; }
+    .btn-submit { background: var(--vert); color: #fff; border: none; padding: 16px 56px; font-weight: 700; font-size: 1.05rem; letter-spacing: 0.05em; cursor: pointer; transition: all 0.25s; width: 100%; max-width: 360px; }
+    .btn-submit:hover:not(:disabled) { background: #1b5e20; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(46,125,50,0.35); }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .case-label { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; user-select: none; }
+    .case-radio { display: none; }
+    .case-box { width: 28px; height: 28px; border: 2px solid #999; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: transparent; transition: color 0.15s; }
+    .case-label input:checked ~ .case-box, .case-box.checked { color: #111; border-color: #111; }
+    .case-text { font-weight: 700; font-size: 0.95rem; color: var(--noir); }
+
+    .toast-custom { position: fixed; bottom: 30px; right: 30px; min-width: 300px; padding: 18px 24px; border-radius: 0; z-index: 9999; display: none; align-items: center; gap: 14px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); animation: slideIn 0.3s ease; }
+    @keyframes slideIn { from { opacity:0; transform: translateX(40px); } to { opacity:1; transform:translateX(0); } }
+    .toast-success { background: var(--vert); color: #fff; }
+    .toast-error { background: var(--rouge); color: #fff; }
+    .toast-custom i { font-size: 1.4rem; }
+    .toast-custom span { font-weight: 600; }
+
+    .spinner { display:inline-block; width:18px; height:18px; border:2px solid rgba(255,255,255,0.4); border-top-color:#fff; border-radius:50%; animation:spin 0.7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 576px) {
+      .fiche-header { flex-direction: column; align-items: center; text-align: center; }
+      .photo-zone { width: 100px; min-height: 120px; align-self: center; }
+      .photo-zone img { height: 118px; }
+      .fiche-section { padding: 20px 16px; }
+      .fiche-signatures { padding: 20px 16px; }
+      .date-adh { padding: 14px 16px; }
+      .submit-zone { padding: 20px 16px; }
+      .toast-custom { left: 16px; right: 16px; min-width: auto; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar-7mp">
+  <div class="container d-flex align-items-center justify-content-between">
+    <a href="/" class="d-flex align-items-center gap-2 text-decoration-none">
+      <img src="{% static '7mp.png' %}" alt="7MP" class="nav-logo" onerror="this.style.display='none'"/>
+      <div class="nav-title d-none d-sm-block"><span>7MP</span> — Adhésion</div>
+    </a>
+    <a href="/" class="nav-link-back">
+      <i class="fas fa-arrow-left"></i> Retour à l'accueil
+    </a>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="container">
+    <h1><i class="fas fa-file-alt me-3"></i>Fiche d'Adhésion</h1>
+    <p>Parti pour les 7 Merveilles du Peuple Gabonais — Commune</p>
+  </div>
+</div>
+
+<!-- MESSAGE SUCCESS DJANGO -->
+{% if messages %}
+  {% for message in messages %}
+    <div style="max-width:760px;margin:20px auto 0;padding:0 16px;">
+      <div style="background:#e8f5e9;border-left:4px solid #2E7D32;padding:14px 20px;color:#2E7D32;font-weight:600;font-family:'Barlow',sans-serif;">
+        <i class="fas fa-check-circle me-2"></i>{{ message }}
+      </div>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<!-- FICHE -->
+<div class="fiche-wrapper">
+  <form id="ficheForm" method="POST" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    <div class="fiche-card">
+
+      <!-- EN-TÊTE -->
+      <div class="fiche-header">
+        <div class="fiche-logo-zone">
+          <img src="{% static '7mp.png' %}" alt="Logo 7MP" class="fiche-logo-img" onerror="this.style.display='none'"/>
+        </div>
+        <div class="fiche-org-title">
+          <h3>Parti pour les 7 Merveilles du Peuple Gabonais</h3>
+          <h2>Fiche d'adhésion (commune)</h2>
+        </div>
+        <div class="photo-zone" id="photoZone" onclick="document.getElementById('photoInput').click()" title="Cliquez pour ajouter votre photo">
+          <img id="photoPreview" alt="Photo adhérent"/>
+          <div class="photo-placeholder" id="photoPlaceholder">
+            <i class="fas fa-camera"></i>
+            <p>Photo<br/><span style="font-size:0.65rem;">(cliquez pour ajouter)</span></p>
+          </div>
+        </div>
+        <input type="file" id="photoInput" name="photo" accept="image/*"/>
+      </div>
+
+      <!-- SECTION 1 : IDENTIFICATION CIVIQUE -->
+      <div class="fiche-section">
+        <div class="section-header"><h4>Identification civique de l'adhérent</h4></div>
+        <div class="field-group">
+          <label>Nom(s) <span class="req">*</span></label>
+          <input class="field-input" type="text" id="noms" name="noms" placeholder="Entrez votre/vos nom(s)..." required/>
+          <div class="field-error">Ce champ est obligatoire.</div>
+        </div>
+        <div class="field-group">
+          <label>Prénom(s) <span class="req">*</span></label>
+          <input class="field-input" type="text" id="prenoms" name="prenoms" placeholder="Entrez votre/vos prénom(s)..." required/>
+          <div class="field-error">Ce champ est obligatoire.</div>
+        </div>
+        <div class="row g-3">
+          <div class="col-sm-6">
+            <div class="field-group">
+              <label>Date de naissance <span class="req">*</span></label>
+              <input class="field-input" type="date" id="dateNaissance" name="date_naissance" required/>
+              <div class="field-error">Ce champ est obligatoire.</div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="field-group">
+              <label>Lieu de naissance <span class="req">*</span></label>
+              <input class="field-input" type="text" id="lieuNaissance" name="lieu_naissance" placeholder="Ville, pays..." required/>
+              <div class="field-error">Ce champ est obligatoire.</div>
+            </div>
+          </div>
+        </div>
+        <div class="field-group">
+          <label>Numéro d'Identification Personnel (N.I.P)</label>
+          <input class="field-input" type="text" id="nip" name="nip" placeholder="Votre N.I.P..."/>
+        </div>
+        <div class="field-group">
+          <label>Profession <span class="req">*</span></label>
+          <input class="field-input" type="text" id="profession" name="profession" placeholder="Votre profession..." required/>
+          <div class="field-error">Ce champ est obligatoire.</div>
+        </div>
+        <div class="field-group">
+          <label>Lieu de résidence <span class="req">*</span></label>
+          <input class="field-input" type="text" id="lieuResidence" name="lieu_residence" placeholder="Ville, quartier..." required/>
+          <div class="field-error">Ce champ est obligatoire.</div>
+        </div>
+        <div class="field-group">
+          <label>Qualité adhérent (Fonction / Mbr actif / Mbr non actif)</label>
+          <input class="field-input" type="text" id="qualite" name="qualite" placeholder="Ex: Membre actif..."/>
+        </div>
+      </div>
+
+      <!-- SECTION 2 : LOCALISATION TERRITORIALE -->
+      <div class="fiche-section">
+        <div class="section-header"><h4>Localisation territoriale politique</h4></div>
+        <div class="row g-3">
+          <div class="col-sm-6">
+            <div class="field-group">
+              <label>Province de vote <span class="req">*</span></label>
+              <select class="field-input" id="province" name="province" required>
+                <option value="">— Sélectionnez —</option>
+                <option>Estuaire</option>
+                <option>Haut-Ogooué</option>
+                <option>Moyen-Ogooué</option>
+                <option>Ngounié</option>
+                <option>Nyanga</option>
+                <option>Ogooué-Ivindo</option>
+                <option>Ogooué-Lolo</option>
+                <option>Ogooué-Maritime</option>
+                <option>Woleu-Ntem</option>
+              </select>
+              <div class="field-error">Veuillez sélectionner une province.</div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="field-group">
+              <label>Commune de vote <span class="req">*</span></label>
+              <input class="field-input" type="text" id="commune" name="commune" placeholder="Votre commune de vote..." required/>
+              <div class="field-error">Ce champ est obligatoire.</div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="field-group">
+              <label>Arrondissement de vote</label>
+              <input class="field-input" type="text" id="arrondissement" name="arrondissement" placeholder="Votre arrondissement..."/>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="field-group">
+              <label>Centre ou bureau de vote</label>
+              <input class="field-input" type="text" id="centreVote" name="centre_vote" placeholder="Centre ou bureau de vote..."/>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 3 : CONTACTS -->
+      <div class="fiche-section">
+        <div class="section-header"><h4>Contacts</h4></div>
+        <div class="field-group">
+          <label>Téléphone <span class="req">*</span></label>
+          <input class="field-input" type="tel" id="telephone" name="telephone" placeholder="Ex: +241 07 XX XX XX" required/>
+          <div class="field-error">Ce champ est obligatoire.</div>
+        </div>
+        <div class="field-group">
+          <label>Adresse (BP, ville/quartier)</label>
+          <input class="field-input" type="text" id="adresse" name="adresse" placeholder="Boîte postale, ville, quartier..."/>
+        </div>
+        <div class="field-group">
+          <label>Email</label>
+          <input class="field-input" type="email" id="email" name="email" placeholder="votre.email@exemple.com"/>
+          <div class="field-error">Adresse email invalide.</div>
+        </div>
+      </div>
+
+      <!-- DATE D'ADHÉSION -->
+      <div class="date-adh">
+        <label>Date d'adhésion <span class="req">*</span></label>
+        <input class="field-input" type="date" id="dateAdh" name="date_adhesion" required/>
+        <div class="field-error">Ce champ est obligatoire.</div>
+      </div>
+
+      <!-- SIGNATURES -->
+      <div class="fiche-signatures">
+        <div class="signature-bloc">
+          <div class="sig-title">Le Secrétaire Général</div>
+          <div class="sig-line"></div>
+          <div class="sig-sub">Signature &amp; cachet</div>
+        </div>
+        <div class="signature-bloc">
+          <div class="sig-title">L'Adhérent</div>
+          <div style="display:flex; justify-content:center; gap:40px; margin-top:12px;">
+            <label class="case-label">
+              <span class="case-box" id="caseOUI">&#10003;</span>
+              <span class="case-text">OUI</span>
+              <input type="radio" name="accordAdherent" value="OUI" class="case-radio" onchange="updateCase(this)"/>
+            </label>
+            <label class="case-label">
+              <span class="case-box" id="caseNON">&#10003;</span>
+              <span class="case-text">NON</span>
+              <input type="radio" name="accordAdherent" value="NON" class="case-radio" onchange="updateCase(this)"/>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOUTON SUBMIT -->
+      <div class="submit-zone">
+        <p class="text-muted mb-3" style="font-size:0.85rem;"><i class="fas fa-info-circle me-1" style="color:var(--vert);"></i>Votre fiche sera transmise automatiquement au Secrétariat Général.</p>
+        <button type="submit" class="btn-submit" id="submitBtn">
+          <i class="fas fa-paper-plane me-2"></i>Soumettre ma fiche d'adhésion
+        </button>
+      </div>
+
+    </div><!-- /.fiche-card -->
+  </form>
+</div><!-- /.fiche-wrapper -->
+
+<!-- TOAST MESSAGES -->
+<div class="toast-custom toast-success" id="toastSuccess">
+  <i class="fas fa-check-circle"></i>
+  <div>
+    <span>Adhésion soumise avec succès !</span>
+    <div style="font-size:0.8rem;opacity:0.9;margin-top:2px;">Votre fiche a été transmise au secrétariat général.</div>
+  </div>
+</div>
+<div class="toast-custom toast-error" id="toastError">
+  <i class="fas fa-exclamation-circle"></i>
+  <div>
+    <span id="toastErrorMsg">Une erreur est survenue.</span>
+    <div style="font-size:0.8rem;opacity:0.9;margin-top:2px;">Veuillez réessayer ou contacter le parti.</div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+<script>
+  function updateCase(radio) {
+    document.querySelectorAll('.case-box').forEach(box => { box.style.color = 'transparent'; box.style.borderColor = '#999'; });
+    const box = radio.closest('.case-label').querySelector('.case-box');
+    box.style.color = '#111'; box.style.borderColor = '#111';
+  }
+
+  document.getElementById('photoInput').addEventListener('change', function() {
+    const file = this.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const preview = document.getElementById('photoPreview');
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+      document.getElementById('photoPlaceholder').style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  document.getElementById('dateAdh').value = new Date().toISOString().split('T')[0];
+
+  function validateField(input) {
+    let valid = true;
+    if (input.hasAttribute('required') && !input.value.trim()) {
+      input.classList.add('is-invalid'); valid = false;
+    } else if (input.type === 'email' && input.value && !/\S+@\S+\.\S+/.test(input.value)) {
+      input.classList.add('is-invalid'); valid = false;
+    } else {
+      input.classList.remove('is-invalid');
+    }
+    return valid;
+  }
+
+  document.querySelectorAll('.field-input').forEach(input => {
+    input.addEventListener('blur', () => validateField(input));
+    input.addEventListener('input', () => { if (input.classList.contains('is-invalid')) validateField(input); });
+  });
+
+  document.getElementById('ficheForm').addEventListener('submit', function(e) {
+    let isValid = true;
+    document.querySelectorAll('.field-input').forEach(input => { if (!validateField(input)) isValid = false; });
+    if (!isValid) {
+      e.preventDefault();
+      document.querySelector('.is-invalid')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  });
+</script>
+</body>
+</html>

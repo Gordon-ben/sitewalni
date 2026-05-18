@@ -1,0 +1,489 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Administration — 7MP</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Barlow:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    :root { --vert:#2E7D32; --jaune:#F9A825; --noir:#111111; --blanc:#FAFAFA; --gris:#F4F4F4; --rouge:#C62828; --sidebar:#0d1f0e; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Barlow',sans-serif; background:var(--gris); color:var(--noir); }
+
+    .sidebar { width:240px; min-height:100vh; background:var(--sidebar); position:fixed; left:0; top:0; z-index:200; display:flex; flex-direction:column; transition:transform 0.3s; }
+    .sidebar-logo { padding:28px 24px 24px; border-bottom:1px solid rgba(255,255,255,0.08); }
+    .sidebar-logo .logo-text { font-family:'Playfair Display',serif; font-size:2rem; font-weight:900; color:var(--jaune); }
+    .sidebar-logo .logo-sub { color:#6a8a6a; font-size:0.72rem; margin-top:2px; }
+    .sidebar-nav { padding:20px 0; flex:1; }
+    .sidebar-nav a { display:flex; align-items:center; gap:12px; padding:12px 24px; color:#8aaa8a; font-size:0.88rem; font-weight:600; text-decoration:none; transition:all 0.2s; }
+    .sidebar-nav a:hover, .sidebar-nav a.active { color:var(--jaune); background:rgba(249,168,37,0.07); }
+    .sidebar-nav a i { width:18px; }
+    .sidebar-footer { padding:20px 24px; border-top:1px solid rgba(255,255,255,0.08); }
+    .sidebar-footer .admin-name { color:var(--jaune); font-weight:700; font-size:0.88rem; }
+    .btn-logout { margin-top:12px; width:100%; background:transparent; color:#8a5a5a; border:1px solid #8a5a5a; padding:8px; font-size:0.8rem; font-weight:700; cursor:pointer; transition:all 0.2s; text-decoration:none; display:block; text-align:center; }
+    .btn-logout:hover { background:var(--rouge); color:#fff; border-color:var(--rouge); }
+
+    .main-content { margin-left:240px; min-height:100vh; background:var(--gris); }
+    .top-bar { background:#fff; padding:18px 32px; border-bottom:1px solid #e0e0e0; display:flex; align-items:center; justify-content:space-between; gap:16px; }
+    .top-bar h4 { font-family:'Playfair Display',serif; font-weight:700; font-size:1.2rem; margin:0; }
+    .hamburger { display:none; background:none; border:none; font-size:1.3rem; color:var(--noir); cursor:pointer; }
+
+    .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:20px; padding:32px 32px 0; }
+    .stat-card { background:#fff; padding:24px 20px; box-shadow:0 2px 12px rgba(0,0,0,0.06); border-left:4px solid var(--vert); }
+    .stat-card .s-num { font-family:'Playfair Display',serif; font-size:2.4rem; font-weight:900; color:var(--vert); line-height:1; }
+    .stat-card .s-label { color:#888; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.1em; margin-top:4px; }
+    .stat-card.jaune { border-color:var(--jaune); }
+    .stat-card.jaune .s-num { color:var(--jaune); }
+
+    .table-zone { padding:24px 32px 40px; }
+    .table-header { background:#fff; padding:20px 24px; border-bottom:1px solid #eee; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+    .table-header h5 { font-family:'Playfair Display',serif; font-weight:700; margin:0; }
+    .search-input { border:1.5px solid #ddd; padding:8px 14px; font-family:'Barlow',sans-serif; font-size:0.9rem; outline:none; width:220px; transition:border-color 0.2s; }
+    .search-input:focus { border-color:var(--vert); }
+    .btn-suppr-sel { background:var(--rouge); color:#fff; border:none; padding:9px 16px; font-weight:700; font-size:0.85rem; cursor:pointer; transition:all 0.2s; display:none; align-items:center; gap:6px; }
+    .btn-suppr-sel:hover { background:#b71c1c; }
+
+    .table-responsive { background:#fff; overflow-x:auto; }
+    table { width:100%; border-collapse:collapse; font-size:0.88rem; }
+    thead { background:var(--noir); }
+    thead th { color:var(--jaune); font-weight:700; padding:14px 16px; text-align:left; white-space:nowrap; font-size:0.8rem; letter-spacing:0.05em; text-transform:uppercase; }
+    tbody tr { border-bottom:1px solid #f0f0f0; transition:background 0.15s; }
+    tbody tr:hover { background:#f9fdf9; }
+    tbody tr.selected { background:#fff5f5 !important; }
+    tbody td { padding:13px 16px; vertical-align:middle; }
+    .badge-actif { background:#e8f5e9; color:var(--vert); font-size:0.75rem; font-weight:700; padding:3px 10px; border-radius:20px; }
+    .badge-autre { background:#fff8e1; color:#e65100; font-size:0.75rem; font-weight:700; padding:3px 10px; border-radius:20px; }
+    .btn-detail { background:none; border:1px solid var(--vert); color:var(--vert); padding:5px 12px; font-size:0.78rem; font-weight:700; cursor:pointer; transition:all 0.2s; }
+    .btn-detail:hover { background:var(--vert); color:#fff; }
+    .btn-delete-row { background:none; border:1px solid #ddd; color:#bbb; padding:5px 10px; font-size:0.78rem; cursor:pointer; transition:all 0.2s; margin-left:4px; }
+    .btn-delete-row:hover { border-color:var(--rouge); color:var(--rouge); background:#fff5f5; }
+    input[type="checkbox"] { width:16px; height:16px; cursor:pointer; accent-color:var(--rouge); }
+    .empty-state { text-align:center; padding:60px 20px; color:#aaa; }
+    .empty-state i { font-size:3rem; margin-bottom:16px; color:#ccc; display:block; }
+
+    /* MODAL */
+    .modal-dialog-fiche { max-width:800px; }
+    .modal-header-custom { background:var(--vert); color:#fff; padding:16px 24px; display:flex; align-items:center; justify-content:space-between; }
+    .modal-header-custom h5 { font-family:'Playfair Display',serif; font-size:1.1rem; margin:0; }
+    .btn-pdf { background:var(--rouge); color:#fff; border:none; padding:10px 20px; font-weight:700; font-size:0.88rem; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:7px; }
+    .btn-pdf:hover { background:#b71c1c; }
+    .btn-pdf:disabled { opacity:0.6; cursor:not-allowed; }
+
+    /* FICHE PREVIEW dans modal */
+    #fichePreview { background:#fff; font-family:'Barlow',sans-serif; border-top:6px solid var(--vert); }
+    .fp-header { display:flex; align-items:center; justify-content:space-between; padding:18px 24px 14px; border-bottom:2px solid #eee; gap:12px; }
+    .fp-logo { width:85px; height:85px; object-fit:contain; flex-shrink:0; }
+    .fp-title { text-align:center; flex:1; }
+    .fp-title h3 { font-family:'Barlow',sans-serif; font-size:0.82rem; font-weight:700; text-decoration:underline; margin-bottom:7px; }
+    .fp-title h2 { font-family:'Barlow',sans-serif; font-size:1.35rem; font-weight:900; }
+    .fp-photo { width:95px; min-width:85px; border:2px solid #999; display:flex; align-items:center; justify-content:center; min-height:115px; flex-shrink:0; background:#f9f9f9; overflow:hidden; }
+    .fp-photo img { width:100%; height:115px; object-fit:cover; }
+    .fp-photo-ph { text-align:center; color:#bbb; font-size:0.68rem; padding:8px; }
+    .fp-photo-ph i { font-size:1.4rem; display:block; margin-bottom:3px; }
+    .fp-section { padding:14px 24px; border-bottom:1px solid #eee; }
+    .fp-section-title { text-align:center; margin-bottom:12px; }
+    .fp-section-title h4 { font-family:'Playfair Display',serif; font-style:italic; font-size:0.95rem; font-weight:700; text-decoration:underline; display:inline-block; padding:0 10px; }
+    .fp-row { display:flex; flex-wrap:wrap; gap:0 20px; }
+    .fp-field { flex:1; min-width:180px; margin-bottom:10px; }
+    .fp-field.full { flex:100%; min-width:100%; }
+    .fp-label { font-weight:700; font-size:0.74rem; color:#666; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:2px; }
+    .fp-val { font-size:0.9rem; color:var(--noir); border-bottom:1.5px dashed #bbb; padding-bottom:3px; min-height:20px; }
+    .fp-date { padding:10px 24px; background:var(--gris); border-top:1px solid #eee; font-size:0.85rem; }
+    .fp-sigs { display:flex; justify-content:space-between; align-items:flex-end; padding:14px 24px 18px; border-top:1px solid #eee; gap:16px; flex-wrap:wrap; }
+    .fp-sig { text-align:center; flex:1; min-width:130px; }
+    .fp-sig-title { font-weight:700; font-size:0.88rem; margin-bottom:34px; }
+    .fp-sig-line { border-top:1.5px solid #999; margin:0 14px; }
+    .fp-sig-sub { font-size:0.7rem; color:#888; margin-top:3px; }
+    .fp-case { width:24px; height:24px; border:2px solid #999; display:inline-flex; align-items:center; justify-content:center; font-size:1rem; }
+
+    .sidebar-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:199; }
+    @media(max-width:768px) {
+      .sidebar { transform:translateX(-100%); }
+      .sidebar.open { transform:translateX(0); }
+      .sidebar-overlay.show { display:block; }
+      .main-content { margin-left:0; }
+      .hamburger { display:block; }
+      .stats-grid { padding:16px; }
+      .table-zone { padding:16px 16px 40px; }
+      .top-bar { padding:14px 16px; }
+      .search-input { width:140px; }
+      .modal-dialog-fiche { margin:8px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-text">7MP</div>
+    <div class="logo-sub">Espace Administration</div>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="/dashboard/" class="active"><i class="fas fa-users"></i>Adhérents</a>
+    <a href="/formulaire/"><i class="fas fa-file-alt"></i>Voir le formulaire</a>
+    <a href="/"><i class="fas fa-home"></i>Site public</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="admin-name">Mr. W. MOUEMBA Josué</div>
+    <a href="/logout/" class="btn-logout"><i class="fas fa-sign-out-alt me-2"></i>Déconnexion</a>
+  </div>
+</div>
+
+<div class="main-content">
+  <div class="top-bar">
+    <div class="d-flex align-items-center gap-3">
+      <button class="hamburger" onclick="openSidebar()"><i class="fas fa-bars"></i></button>
+      <h4>Tableau de bord — Adhérents</h4>
+    </div>
+    <div style="font-size:0.82rem;color:#888;"><i class="fas fa-envelope me-1"></i>mouyombialoubasagesseben@gmail.com</div>
+  </div>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div style="background:#e8f5e9;border-left:3px solid var(--vert);padding:10px 32px;font-size:0.85rem;color:var(--vert);">
+        <i class="fas fa-check-circle me-2"></i>{{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <div class="stats-grid">
+    <div class="stat-card"><div class="s-num">{{ total }}</div><div class="s-label">Total adhérents</div></div>
+    <div class="stat-card jaune"><div class="s-num">{{ ce_mois }}</div><div class="s-label">Ce mois</div></div>
+    <div class="stat-card"><div class="s-num">{{ provinces }}</div><div class="s-label">Provinces représentées</div></div>
+  </div>
+
+  <div class="table-zone">
+    <div class="table-header">
+      <h5><i class="fas fa-list me-2" style="color:var(--vert);"></i>Liste des adhérents</h5>
+      <div class="d-flex gap-2 flex-wrap align-items-center">
+        <form method="GET" action="/dashboard/" style="margin:0;">
+          <input class="search-input" type="text" name="q" value="{{ q }}" placeholder="Rechercher..."/>
+        </form>
+        <button class="btn-suppr-sel" id="btnSupprimerSelection" onclick="supprimerSelection()">
+          <i class="fas fa-trash"></i>Supprimer la sélection (<span id="nbSelection">0</span>)
+        </button>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:40px;"><input type="checkbox" id="checkAll" onchange="toggleAll(this)" title="Tout sélectionner"/></th>
+            <th>#</th><th>Nom complet</th><th>Téléphone</th><th>Province</th>
+            <th>Commune</th><th>Qualité</th><th>Date adhésion</th><th>Enregistré le</th><th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          {% if adherents %}
+            {% for a in adherents %}
+            <tr id="row_{{ a.pk }}">
+              <td style="text-align:center;"><input type="checkbox" class="row-check" data-id="{{ a.pk }}" onchange="onCheckChange()"/></td>
+              <td style="color:#aaa;font-size:0.8rem;">{{ forloop.counter }}</td>
+              <td><strong>{{ a.prenoms }} {{ a.noms }}</strong></td>
+              <td>{{ a.telephone|default:"—" }}</td>
+              <td>{{ a.province|default:"—" }}</td>
+              <td>{{ a.commune|default:"—" }}</td>
+              <td>
+                {% if a.qualite %}
+                  <span class="{% if 'actif' in a.qualite|lower and 'non' not in a.qualite|lower %}badge-actif{% else %}badge-autre{% endif %}">{{ a.qualite }}</span>
+                {% else %}
+                  <span style="color:#ccc">—</span>
+                {% endif %}
+              </td>
+              <td style="white-space:nowrap;">{{ a.date_adhesion|date:"d/m/Y" }}</td>
+              <td style="white-space:nowrap;font-size:0.8rem;color:#888;">{{ a.date_enregistrement|date:"d/m/Y H:i" }}</td>
+              <td>
+                <button class="btn-detail" onclick="voirFiche({{ a.pk }})"><i class="fas fa-eye me-1"></i>Voir fiche</button>
+                <button class="btn-delete-row" onclick="supprimerUn({{ a.pk }}, '{{ a.prenoms }} {{ a.noms }}')"><i class="fas fa-trash"></i></button>
+              </td>
+            </tr>
+            {% endfor %}
+          {% else %}
+            <tr><td colspan="10">
+              <div class="empty-state">
+                <i class="fas fa-users"></i>
+                <p>Aucun adhérent enregistré.<br/>Les fiches apparaîtront ici dès soumission.</p>
+              </div>
+            </td></tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL FICHE -->
+<div class="modal fade" id="ficheModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-fiche modal-dialog-scrollable">
+    <div class="modal-content" style="border:none;border-radius:0;">
+      <div class="modal-header-custom">
+        <h5><i class="fas fa-id-card me-2"></i>Fiche d'adhésion complète</h5>
+        <div class="d-flex align-items-center gap-2">
+          <button class="btn-pdf" id="btnPdfTop" onclick="telechargerPDF()"><i class="fas fa-file-pdf"></i> Télécharger PDF</button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" style="filter:invert(1);"></button>
+        </div>
+      </div>
+      <div class="modal-body" style="padding:20px;background:#ddd;">
+        <div id="fichePreview">
+          <div class="fp-header">
+            <img src="{% static '7mp.png' %}" alt="7MP" class="fp-logo" onerror="this.style.display='none'"/>
+            <div class="fp-title">
+              <h3>Parti pour les 7 Merveilles du Peuple Gabonais</h3>
+              <h2>Fiche d'adhésion (commune)</h2>
+            </div>
+            <div class="fp-photo" id="fpPhotoBox">
+              <div class="fp-photo-ph" id="fpPhotoPh"><i class="fas fa-user"></i>Pas de photo</div>
+              <img id="fpPhotoImg" src="" alt="" style="display:none;"/>
+            </div>
+          </div>
+
+          <div class="fp-section">
+            <div class="fp-section-title"><h4>Identification civique de l'adhérent</h4></div>
+            <div class="fp-row">
+              <div class="fp-field"><div class="fp-label">Nom(s)</div><div class="fp-val" id="p_noms"></div></div>
+              <div class="fp-field"><div class="fp-label">Prénom(s)</div><div class="fp-val" id="p_prenoms"></div></div>
+              <div class="fp-field"><div class="fp-label">Date de naissance</div><div class="fp-val" id="p_date_naissance"></div></div>
+              <div class="fp-field"><div class="fp-label">Lieu de naissance</div><div class="fp-val" id="p_lieu_naissance"></div></div>
+              <div class="fp-field"><div class="fp-label">N.I.P</div><div class="fp-val" id="p_nip"></div></div>
+              <div class="fp-field"><div class="fp-label">Profession</div><div class="fp-val" id="p_profession"></div></div>
+              <div class="fp-field"><div class="fp-label">Lieu de résidence</div><div class="fp-val" id="p_lieu_residence"></div></div>
+              <div class="fp-field"><div class="fp-label">Qualité adhérent</div><div class="fp-val" id="p_qualite"></div></div>
+            </div>
+          </div>
+
+          <div class="fp-section">
+            <div class="fp-section-title"><h4>Localisation territoriale politique</h4></div>
+            <div class="fp-row">
+              <div class="fp-field"><div class="fp-label">Province de vote</div><div class="fp-val" id="p_province"></div></div>
+              <div class="fp-field"><div class="fp-label">Commune de vote</div><div class="fp-val" id="p_commune"></div></div>
+              <div class="fp-field"><div class="fp-label">Arrondissement</div><div class="fp-val" id="p_arrondissement"></div></div>
+              <div class="fp-field"><div class="fp-label">Centre / Bureau de vote</div><div class="fp-val" id="p_centre_vote"></div></div>
+            </div>
+          </div>
+
+          <div class="fp-section">
+            <div class="fp-section-title"><h4>Contacts</h4></div>
+            <div class="fp-row">
+              <div class="fp-field"><div class="fp-label">Téléphone</div><div class="fp-val" id="p_telephone"></div></div>
+              <div class="fp-field"><div class="fp-label">Email</div><div class="fp-val" id="p_email"></div></div>
+              <div class="fp-field full"><div class="fp-label">Adresse (BP, ville/quartier)</div><div class="fp-val" id="p_adresse"></div></div>
+            </div>
+          </div>
+
+          <div class="fp-date">
+            <strong>Date d'adhésion :</strong> <span id="p_date_adhesion"></span>
+            &nbsp;&nbsp;&nbsp;
+            <strong>Enregistré le :</strong> <span id="p_date_enregistrement"></span>
+          </div>
+
+          <div class="fp-sigs">
+            <div class="fp-sig">
+              <div class="fp-sig-title">Le Secrétaire Général</div>
+              <div class="fp-sig-line"></div>
+              <div class="fp-sig-sub">Signature &amp; cachet</div>
+            </div>
+            <div class="fp-sig">
+              <div class="fp-sig-title">L'Adhérent</div>
+              <div style="display:flex;justify-content:center;gap:28px;margin-top:8px;">
+                <div style="text-align:center;">
+                  <div class="fp-case" id="caseOUI_p" style="color:#111;border-color:#111;margin:0 auto;">&#10003;</div>
+                  <div style="font-weight:700;font-size:0.85rem;margin-top:4px;">OUI</div>
+                </div>
+                <div style="text-align:center;">
+                  <div class="fp-case" id="caseNON_p" style="color:transparent;border-color:#999;margin:0 auto;">&#10003;</div>
+                  <div style="font-weight:700;font-size:0.85rem;margin-top:4px;">NON</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+        <button class="btn-pdf" id="btnPdfBottom" onclick="telechargerPDF()"><i class="fas fa-file-pdf me-1"></i>Télécharger PDF</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Données adhérents pour JS -->
+<script>
+  const adherentsData = {
+    {% for a in all_adherents %}
+    "{{ a.pk }}": {
+      noms: "{{ a.noms|escapejs }}",
+      prenoms: "{{ a.prenoms|escapejs }}",
+      date_naissance: "{{ a.date_naissance|date:'d/m/Y' }}",
+      lieu_naissance: "{{ a.lieu_naissance|escapejs }}",
+      nip: "{{ a.nip|escapejs }}",
+      profession: "{{ a.profession|escapejs }}",
+      lieu_residence: "{{ a.lieu_residence|escapejs }}",
+      qualite: "{{ a.qualite|escapejs }}",
+      province: "{{ a.province|escapejs }}",
+      commune: "{{ a.commune|escapejs }}",
+      arrondissement: "{{ a.arrondissement|escapejs }}",
+      centre_vote: "{{ a.centre_vote|escapejs }}",
+      telephone: "{{ a.telephone|escapejs }}",
+      email: "{{ a.email|escapejs }}",
+      adresse: "{{ a.adresse|escapejs }}",
+      date_adhesion: "{{ a.date_adhesion|date:'d/m/Y' }}",
+      date_enregistrement: "{{ a.date_enregistrement|date:'d/m/Y H:i' }}",
+      photo_url: "{% if a.photo %}{{ a.photo.url }}{% endif %}",
+    },
+    {% endfor %}
+  };
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+<script>
+  function openSidebar() { document.getElementById('sidebar').classList.add('open'); document.getElementById('overlay').classList.add('show'); }
+  function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('show'); }
+
+  function toggleAll(cb) {
+    document.querySelectorAll('.row-check').forEach(c => {
+      c.checked = cb.checked;
+      c.closest('tr')?.classList.toggle('selected', cb.checked);
+    });
+    updateSelectionUI();
+  }
+
+  function onCheckChange() {
+    document.querySelectorAll('.row-check').forEach(c => {
+      c.closest('tr')?.classList.toggle('selected', c.checked);
+    });
+    const all = document.querySelectorAll('.row-check');
+    const checked = document.querySelectorAll('.row-check:checked');
+    const master = document.getElementById('checkAll');
+    if (master) {
+      master.indeterminate = checked.length > 0 && checked.length < all.length;
+      master.checked = checked.length === all.length && all.length > 0;
+    }
+    updateSelectionUI();
+  }
+
+  function updateSelectionUI() {
+    const checked = document.querySelectorAll('.row-check:checked');
+    const btn = document.getElementById('btnSupprimerSelection');
+    const nb = document.getElementById('nbSelection');
+    if (btn) btn.style.display = checked.length > 0 ? 'inline-flex' : 'none';
+    if (nb) nb.textContent = checked.length;
+  }
+
+  function supprimerUn(id, nomComplet) {
+    if (!confirm(`Supprimer la fiche de :\n\n${nomComplet} ?\n\nCette action est irréversible.`)) return;
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = `/supprimer/${id}/`;
+    form.innerHTML = `<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}"/>`;
+    document.body.appendChild(form);
+    form.submit();
+  }
+
+  function supprimerSelection() {
+    const checked = document.querySelectorAll('.row-check:checked');
+    if (!checked.length) return;
+    const ids = Array.from(checked).map(c => c.dataset.id);
+    if (!confirm(`Supprimer ${ids.length} adhérent(s) sélectionné(s) ?\n\nCette action est irréversible.`)) return;
+    ids.forEach(id => {
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = `/supprimer/${id}/`;
+      form.innerHTML = `<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}"/>`;
+      document.body.appendChild(form);
+      form.submit();
+    });
+  }
+
+  let adherentActif = null;
+
+  function voirFiche(id) {
+    const a = adherentsData[id];
+    if (!a) return;
+    adherentActif = a;
+
+    const set = (eid, val) => { const el = document.getElementById(eid); if(el) el.textContent = val || '—'; };
+    set('p_noms', a.noms);
+    set('p_prenoms', a.prenoms);
+    set('p_date_naissance', a.date_naissance);
+    set('p_lieu_naissance', a.lieu_naissance);
+    set('p_nip', a.nip);
+    set('p_profession', a.profession);
+    set('p_lieu_residence', a.lieu_residence);
+    set('p_qualite', a.qualite);
+    set('p_province', a.province);
+    set('p_commune', a.commune);
+    set('p_arrondissement', a.arrondissement);
+    set('p_centre_vote', a.centre_vote);
+    set('p_telephone', a.telephone);
+    set('p_email', a.email);
+    set('p_adresse', a.adresse);
+    set('p_date_adhesion', a.date_adhesion);
+    set('p_date_enregistrement', a.date_enregistrement);
+
+    // Photo
+    const img = document.getElementById('fpPhotoImg');
+    const ph = document.getElementById('fpPhotoPh');
+    if (a.photo_url) {
+      img.src = a.photo_url; img.style.display = 'block'; ph.style.display = 'none';
+    } else {
+      img.style.display = 'none'; ph.style.display = 'block';
+    }
+
+    new bootstrap.Modal(document.getElementById('ficheModal')).show();
+  }
+
+  async function telechargerPDF() {
+    const btns = [document.getElementById('btnPdfTop'), document.getElementById('btnPdfBottom')];
+    btns.forEach(b => { if(b){ b.disabled=true; b.innerHTML='<i class="fas fa-spinner fa-spin me-1"></i>Génération...'; }});
+
+    try {
+      const element = document.getElementById('fichePreview');
+      const canvas = await html2canvas(element, {
+        scale: 2, useCORS: true, allowTaint: true,
+        backgroundColor: '#ffffff', logging: false, imageTimeout: 0
+      });
+
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
+      const pageW = pdf.internal.pageSize.getWidth();
+      const pageH = pdf.internal.pageSize.getHeight();
+      const margin = 10;
+      const imgW = pageW - margin*2;
+      const imgH = (canvas.height * imgW) / canvas.width;
+      const imgData = canvas.toDataURL('image/jpeg', 0.95);
+
+      if (imgH <= pageH - margin*2) {
+        pdf.addImage(imgData, 'JPEG', margin, margin, imgW, imgH);
+      } else {
+        let yPos = 0, pageNum = 0;
+        const pageContentH = pageH - margin*2;
+        const canvasPageH = (pageContentH * canvas.width) / imgW;
+        while (yPos < canvas.height) {
+          if (pageNum > 0) pdf.addPage();
+          const sliceH = Math.min(canvasPageH, canvas.height - yPos);
+          const tmp = document.createElement('canvas');
+          tmp.width = canvas.width; tmp.height = sliceH;
+          tmp.getContext('2d').drawImage(canvas, 0, yPos, canvas.width, sliceH, 0, 0, canvas.width, sliceH);
+          pdf.addImage(tmp.toDataURL('image/jpeg',0.95), 'JPEG', margin, margin, imgW, (sliceH*imgW)/canvas.width);
+          yPos += sliceH; pageNum++;
+        }
+      }
+
+      const nom = adherentActif ? `${adherentActif.prenoms}_${adherentActif.noms}`.replace(/\s+/g,'_') : 'adherent';
+      pdf.save(`fiche_7MP_${nom}_${new Date().toISOString().split('T')[0]}.pdf`);
+    } catch(err) {
+      console.error(err);
+      alert('Erreur lors de la génération du PDF. Veuillez réessayer.');
+    }
+
+    btns.forEach(b => { if(b){ b.disabled=false; b.innerHTML='<i class="fas fa-file-pdf me-1"></i>Télécharger PDF'; }});
+  }
+</script>
+</body>
+</html>

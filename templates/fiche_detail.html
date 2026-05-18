@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fiche {{ a.prenoms }} {{ a.noms }} — 7MP</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Barlow:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root { --vert:#2E7D32; --jaune:#F9A825; --noir:#111111; --gris:#F4F4F4; }
+    body { font-family:'Barlow',sans-serif; background:var(--gris); }
+    .top-actions { background:#fff; padding:16px 32px; border-bottom:1px solid #eee; display:flex; align-items:center; gap:16px; }
+    .btn-back { color:var(--vert); font-weight:700; text-decoration:none; font-size:0.9rem; }
+    .btn-print { background:var(--vert); color:#fff; border:none; padding:9px 20px; font-weight:700; cursor:pointer; }
+    .fiche-wrapper { max-width:760px; margin:32px auto; padding:0 16px 60px; }
+    .fiche-card { background:#fff; box-shadow:0 4px 32px rgba(0,0,0,0.1); border-top:6px solid var(--vert); }
+    .fp-header { display:flex; align-items:center; justify-content:space-between; padding:18px 24px 14px; border-bottom:2px solid #eee; gap:12px; }
+    .fp-title { text-align:center; flex:1; }
+    .fp-title h3 { font-family:'Barlow',sans-serif; font-size:0.82rem; font-weight:700; text-decoration:underline; margin-bottom:7px; }
+    .fp-title h2 { font-family:'Barlow',sans-serif; font-size:1.35rem; font-weight:900; }
+    .fp-photo { width:95px; min-width:85px; border:2px solid #999; display:flex; align-items:center; justify-content:center; min-height:115px; flex-shrink:0; background:#f9f9f9; overflow:hidden; }
+    .fp-photo img { width:100%; height:115px; object-fit:cover; }
+    .fp-section { padding:14px 24px; border-bottom:1px solid #eee; }
+    .fp-section-title { text-align:center; margin-bottom:12px; }
+    .fp-section-title h4 { font-family:'Playfair Display',serif; font-style:italic; font-size:0.95rem; font-weight:700; text-decoration:underline; display:inline-block; padding:0 10px; }
+    .fp-row { display:flex; flex-wrap:wrap; gap:0 20px; }
+    .fp-field { flex:1; min-width:180px; margin-bottom:10px; }
+    .fp-label { font-weight:700; font-size:0.74rem; color:#666; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:2px; }
+    .fp-val { font-size:0.9rem; color:var(--noir); border-bottom:1.5px dashed #bbb; padding-bottom:3px; min-height:20px; }
+    .fp-sigs { display:flex; justify-content:space-between; align-items:flex-end; padding:14px 24px 18px; border-top:1px solid #eee; gap:16px; flex-wrap:wrap; }
+    .fp-sig { text-align:center; flex:1; min-width:130px; }
+    .fp-sig-title { font-weight:700; font-size:0.88rem; margin-bottom:34px; }
+    .fp-sig-line { border-top:1.5px solid #999; margin:0 14px; }
+    .fp-sig-sub { font-size:0.7rem; color:#888; margin-top:3px; }
+    @media print { .top-actions { display:none!important; } body { background:#fff; } }
+  </style>
+</head>
+<body>
+
+<div class="top-actions">
+  <a class="btn-back" href="/dashboard/"><i class="fas fa-arrow-left me-1"></i>Retour au dashboard</a>
+  <button class="btn-print" onclick="window.print()"><i class="fas fa-print me-1"></i>Imprimer</button>
+  <a class="btn-back" href="/supprimer/{{ a.pk }}/" style="color:#C62828;margin-left:auto;"><i class="fas fa-trash me-1"></i>Supprimer</a>
+</div>
+
+<div class="fiche-wrapper">
+  <div class="fiche-card">
+    <div class="fp-header">
+      <div class="fp-title">
+        <h3>FICHE D'ADHÉSION AU PARTI</h3>
+        <h2>7MP</h2>
+        <div style="font-size:0.78rem;color:#666;margin-top:3px;">Parti pour les 7 Merveilles du Peuple Gabonais</div>
+      </div>
+      <div class="fp-photo">
+        {% if a.photo %}
+          <img src="{{ a.photo.url }}" alt="Photo"/>
+        {% else %}
+          <div style="text-align:center;color:#bbb;font-size:0.68rem;padding:8px;"><i class="fas fa-user" style="font-size:1.4rem;display:block;margin-bottom:3px;"></i>Pas de photo</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- IDENTIFICATION -->
+    <div class="fp-section">
+      <div class="fp-section-title"><h4>Identification Civique</h4></div>
+      <div class="fp-row">
+        <div class="fp-field"><div class="fp-label">Nom(s)</div><div class="fp-val">{{ a.noms }}</div></div>
+        <div class="fp-field"><div class="fp-label">Prénom(s)</div><div class="fp-val">{{ a.prenoms }}</div></div>
+        <div class="fp-field"><div class="fp-label">Date de naissance</div><div class="fp-val">{{ a.date_naissance|date:"d/m/Y" }}</div></div>
+        <div class="fp-field"><div class="fp-label">Lieu de naissance</div><div class="fp-val">{{ a.lieu_naissance }}</div></div>
+        <div class="fp-field"><div class="fp-label">N.I.P</div><div class="fp-val">{{ a.nip|default:"—" }}</div></div>
+        <div class="fp-field"><div class="fp-label">Profession</div><div class="fp-val">{{ a.profession }}</div></div>
+        <div class="fp-field"><div class="fp-label">Lieu de résidence</div><div class="fp-val">{{ a.lieu_residence }}</div></div>
+        <div class="fp-field"><div class="fp-label">Qualité</div><div class="fp-val">{{ a.qualite|default:"—" }}</div></div>
+      </div>
+    </div>
+
+    <!-- LOCALISATION -->
+    <div class="fp-section">
+      <div class="fp-section-title"><h4>Localisation Territoriale</h4></div>
+      <div class="fp-row">
+        <div class="fp-field"><div class="fp-label">Province</div><div class="fp-val">{{ a.province }}</div></div>
+        <div class="fp-field"><div class="fp-label">Commune</div><div class="fp-val">{{ a.commune }}</div></div>
+        <div class="fp-field"><div class="fp-label">Arrondissement</div><div class="fp-val">{{ a.arrondissement|default:"—" }}</div></div>
+        <div class="fp-field"><div class="fp-label">Centre de vote</div><div class="fp-val">{{ a.centre_vote|default:"—" }}</div></div>
+      </div>
+    </div>
+
+    <!-- CONTACTS -->
+    <div class="fp-section">
+      <div class="fp-section-title"><h4>Contacts</h4></div>
+      <div class="fp-row">
+        <div class="fp-field"><div class="fp-label">Téléphone</div><div class="fp-val">{{ a.telephone }}</div></div>
+        <div class="fp-field"><div class="fp-label">Email</div><div class="fp-val">{{ a.email|default:"—" }}</div></div>
+        <div class="fp-field" style="flex:100%;"><div class="fp-label">Adresse</div><div class="fp-val">{{ a.adresse|default:"—" }}</div></div>
+      </div>
+    </div>
+
+    <!-- DATE -->
+    <div class="fp-section" style="background:var(--gris);">
+      <div class="fp-row">
+        <div class="fp-field"><div class="fp-label">Date d'adhésion</div><div class="fp-val">{{ a.date_adhesion|date:"d/m/Y" }}</div></div>
+        <div class="fp-field"><div class="fp-label">Enregistré le</div><div class="fp-val">{{ a.date_enregistrement|date:"d/m/Y à H:i" }}</div></div>
+      </div>
+    </div>
+
+    <!-- SIGNATURES -->
+    <div class="fp-sigs">
+      <div class="fp-sig">
+        <div class="fp-sig-title">L'Adhérent(e)</div>
+        <div class="fp-sig-line"></div>
+        <div class="fp-sig-sub">Signature</div>
+      </div>
+      <div class="fp-sig">
+        <div class="fp-sig-title">Le Secrétaire Général</div>
+        <div class="fp-sig-line"></div>
+        <div class="fp-sig-sub">Mr. W. MOUEMBA Josué</div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
