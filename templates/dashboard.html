@@ -74,32 +74,66 @@
     .btn-pdf:hover { background:#b71c1c; }
     .btn-pdf:disabled { opacity:0.6; cursor:not-allowed; }
 
-    /* FICHE PREVIEW dans modal */
-    #fichePreview { background:#fff; font-family:'Barlow',sans-serif; border-top:6px solid var(--vert); width:700px; }
+    /* FICHE DANS MODAL (aperçu) */
+    #fichePreview { background:#fff; font-family:'Barlow',sans-serif; border-top:6px solid #2E7D32; }
     .fp-header { display:flex; align-items:center; justify-content:space-between; padding:14px 20px 12px; border-bottom:2px solid #eee; gap:10px; }
     .fp-logo { width:80px; height:80px; object-fit:contain; flex-shrink:0; }
     .fp-title { text-align:center; flex:1; }
-    .fp-title h3 { font-family:'Barlow',sans-serif; font-size:0.78rem; font-weight:700; text-decoration:underline; margin-bottom:5px; }
-    .fp-title h2 { font-family:'Barlow',sans-serif; font-size:1.2rem; font-weight:900; }
+    .fp-title h3 { font-size:0.78rem; font-weight:700; text-decoration:underline; margin-bottom:5px; }
+    .fp-title h2 { font-size:1.2rem; font-weight:900; }
     .fp-photo { width:90px; min-width:90px; border:2px solid #999; display:flex; align-items:center; justify-content:center; height:110px; flex-shrink:0; background:#f9f9f9; overflow:hidden; }
     .fp-photo img { width:100%; height:110px; object-fit:cover; }
     .fp-photo-ph { text-align:center; color:#bbb; font-size:0.65rem; padding:6px; }
-    .fp-photo-ph i { font-size:1.3rem; display:block; margin-bottom:3px; }
     .fp-section { padding:10px 20px; border-bottom:1px solid #eee; }
     .fp-section-title { text-align:center; margin-bottom:8px; }
-    .fp-section-title h4 { font-family:'Playfair Display',serif; font-style:italic; font-size:0.88rem; font-weight:700; text-decoration:underline; display:inline-block; padding:0 10px; }
+    .fp-section-title h4 { font-family:'Playfair Display',serif; font-style:italic; font-size:0.88rem; font-weight:700; text-decoration:underline; }
     .fp-row { display:flex; flex-wrap:wrap; gap:0 16px; }
     .fp-field { flex:1; min-width:140px; margin-bottom:8px; }
-    .fp-field.full { flex:100%; min-width:100%; }
+    .fp-field.full { flex:100%; }
     .fp-label { font-weight:700; font-size:0.65rem; color:#666; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:1px; }
-    .fp-val { font-size:0.82rem; color:var(--noir); border-bottom:1.5px dashed #bbb; padding-bottom:2px; min-height:18px; }
-    .fp-date { padding:8px 20px; background:var(--gris); border-top:1px solid #eee; font-size:0.82rem; }
+    .fp-val { font-size:0.82rem; color:#111; border-bottom:1.5px dashed #bbb; padding-bottom:2px; min-height:18px; }
+    .fp-date { padding:8px 20px; background:#F4F4F4; font-size:0.82rem; }
     .fp-sigs { display:flex; justify-content:space-between; align-items:flex-end; padding:12px 20px 16px; border-top:1px solid #eee; gap:16px; }
-    .fp-sig { text-align:center; flex:1; min-width:130px; }
+    .fp-sig { text-align:center; flex:1; }
     .fp-sig-title { font-weight:700; font-size:0.85rem; margin-bottom:30px; }
     .fp-sig-line { border-top:1.5px solid #999; margin:0 14px; }
     .fp-sig-sub { font-size:0.68rem; color:#888; margin-top:3px; }
     .fp-case { width:22px; height:22px; border:2px solid #999; display:inline-flex; align-items:center; justify-content:center; font-size:0.9rem; }
+
+    /* DIV CACHÉE POUR PDF — taille fixe A4 */
+    #fichePDF {
+      position: fixed;
+      left: -9999px;
+      top: 0;
+      width: 794px;
+      background: #fff;
+      font-family: 'Barlow', sans-serif;
+      border-top: 6px solid #2E7D32;
+      z-index: -1;
+    }
+    #fichePDF .fp-header { display:flex; align-items:center; justify-content:space-between; padding:16px 24px 14px; border-bottom:2px solid #eee; gap:12px; }
+    #fichePDF .fp-logo { width:85px; height:85px; object-fit:contain; flex-shrink:0; }
+    #fichePDF .fp-title { text-align:center; flex:1; }
+    #fichePDF .fp-title h3 { font-size:0.82rem; font-weight:700; text-decoration:underline; margin-bottom:7px; }
+    #fichePDF .fp-title h2 { font-size:1.35rem; font-weight:900; }
+    #fichePDF .fp-photo { width:100px; min-width:100px; border:2px solid #999; display:flex; align-items:center; justify-content:center; height:120px; flex-shrink:0; background:#f9f9f9; overflow:hidden; }
+    #fichePDF .fp-photo img { width:100%; height:120px; object-fit:cover; }
+    #fichePDF .fp-photo-ph { text-align:center; color:#bbb; font-size:0.7rem; padding:8px; }
+    #fichePDF .fp-section { padding:12px 24px; border-bottom:1px solid #eee; }
+    #fichePDF .fp-section-title { text-align:center; margin-bottom:10px; }
+    #fichePDF .fp-section-title h4 { font-family:'Playfair Display',serif; font-style:italic; font-size:0.95rem; font-weight:700; text-decoration:underline; }
+    #fichePDF .fp-row { display:flex; flex-wrap:wrap; gap:0 20px; }
+    #fichePDF .fp-field { flex:1; min-width:180px; margin-bottom:10px; }
+    #fichePDF .fp-field.full { flex:100%; }
+    #fichePDF .fp-label { font-weight:700; font-size:0.72rem; color:#666; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:2px; }
+    #fichePDF .fp-val { font-size:0.9rem; color:#111; border-bottom:1.5px dashed #bbb; padding-bottom:3px; min-height:20px; }
+    #fichePDF .fp-date { padding:10px 24px; background:#F4F4F4; font-size:0.85rem; font-weight:600; }
+    #fichePDF .fp-sigs { display:flex; justify-content:space-between; align-items:flex-end; padding:14px 24px 18px; border-top:1px solid #eee; gap:16px; }
+    #fichePDF .fp-sig { text-align:center; flex:1; }
+    #fichePDF .fp-sig-title { font-weight:700; font-size:0.9rem; margin-bottom:34px; }
+    #fichePDF .fp-sig-line { border-top:1.5px solid #999; margin:0 14px; }
+    #fichePDF .fp-sig-sub { font-size:0.72rem; color:#888; margin-top:3px; }
+    #fichePDF .fp-case { width:24px; height:24px; border:2px solid #999; display:inline-flex; align-items:center; justify-content:center; font-size:1rem; }
 
     .sidebar-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:199; }
     @media(max-width:768px) {
@@ -117,6 +151,81 @@
   </style>
 </head>
 <body>
+
+<!-- DIV CACHÉE POUR GÉNÉRATION PDF -->
+<div id="fichePDF">
+  <div class="fp-header">
+    <img id="pdf_logo" src="{% static '7mp.png' %}" alt="7MP" class="fp-logo"/>
+    <div class="fp-title">
+      <h3>Parti pour les 7 Merveilles du Peuple Gabonais</h3>
+      <h2>Fiche d'adhésion (commune)</h2>
+    </div>
+    <div class="fp-photo" id="pdf_photoBox">
+      <div class="fp-photo-ph" id="pdf_photoPh">Pas de photo</div>
+      <img id="pdf_photoImg" src="" alt="" style="display:none;"/>
+    </div>
+  </div>
+
+  <div class="fp-section">
+    <div class="fp-section-title"><h4>Identification civique de l'adhérent</h4></div>
+    <div class="fp-row">
+      <div class="fp-field"><div class="fp-label">Nom(s)</div><div class="fp-val" id="pdf_noms"></div></div>
+      <div class="fp-field"><div class="fp-label">Prénom(s)</div><div class="fp-val" id="pdf_prenoms"></div></div>
+      <div class="fp-field"><div class="fp-label">Date de naissance</div><div class="fp-val" id="pdf_date_naissance"></div></div>
+      <div class="fp-field"><div class="fp-label">Lieu de naissance</div><div class="fp-val" id="pdf_lieu_naissance"></div></div>
+      <div class="fp-field"><div class="fp-label">N.I.P</div><div class="fp-val" id="pdf_nip"></div></div>
+      <div class="fp-field"><div class="fp-label">Profession</div><div class="fp-val" id="pdf_profession"></div></div>
+      <div class="fp-field"><div class="fp-label">Lieu de résidence</div><div class="fp-val" id="pdf_lieu_residence"></div></div>
+      <div class="fp-field"><div class="fp-label">Qualité adhérent</div><div class="fp-val" id="pdf_qualite"></div></div>
+    </div>
+  </div>
+
+  <div class="fp-section">
+    <div class="fp-section-title"><h4>Localisation territoriale politique</h4></div>
+    <div class="fp-row">
+      <div class="fp-field"><div class="fp-label">Province de vote</div><div class="fp-val" id="pdf_province"></div></div>
+      <div class="fp-field"><div class="fp-label">Commune de vote</div><div class="fp-val" id="pdf_commune"></div></div>
+      <div class="fp-field"><div class="fp-label">Arrondissement</div><div class="fp-val" id="pdf_arrondissement"></div></div>
+      <div class="fp-field"><div class="fp-label">Centre / Bureau de vote</div><div class="fp-val" id="pdf_centre_vote"></div></div>
+    </div>
+  </div>
+
+  <div class="fp-section">
+    <div class="fp-section-title"><h4>Contacts</h4></div>
+    <div class="fp-row">
+      <div class="fp-field"><div class="fp-label">Téléphone</div><div class="fp-val" id="pdf_telephone"></div></div>
+      <div class="fp-field"><div class="fp-label">Email</div><div class="fp-val" id="pdf_email"></div></div>
+      <div class="fp-field full"><div class="fp-label">Adresse (BP, ville/quartier)</div><div class="fp-val" id="pdf_adresse"></div></div>
+    </div>
+  </div>
+
+  <div class="fp-date">
+    <strong>Date d'adhésion :</strong> <span id="pdf_date_adhesion"></span>
+    &nbsp;&nbsp;&nbsp;
+    <strong>Enregistré le :</strong> <span id="pdf_date_enregistrement"></span>
+  </div>
+
+  <div class="fp-sigs">
+    <div class="fp-sig">
+      <div class="fp-sig-title">Le Secrétaire Général</div>
+      <div class="fp-sig-line"></div>
+      <div class="fp-sig-sub">Signature &amp; cachet</div>
+    </div>
+    <div class="fp-sig">
+      <div class="fp-sig-title">L'Adhérent</div>
+      <div style="display:flex;justify-content:center;gap:28px;margin-top:8px;">
+        <div style="text-align:center;">
+          <div class="fp-case" style="color:#111;border-color:#111;margin:0 auto;">&#10003;</div>
+          <div style="font-weight:700;font-size:0.9rem;margin-top:4px;">OUI</div>
+        </div>
+        <div style="text-align:center;">
+          <div class="fp-case" style="color:transparent;border-color:#999;margin:0 auto;">&#10003;</div>
+          <div style="font-weight:700;font-size:0.9rem;margin-top:4px;">NON</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
 <div class="sidebar" id="sidebar">
@@ -218,7 +327,7 @@
   </div>
 </div>
 
-<!-- MODAL FICHE -->
+<!-- MODAL FICHE APERÇU -->
 <div class="modal fade" id="ficheModal" tabindex="-1">
   <div class="modal-dialog modal-dialog-fiche modal-dialog-scrollable">
     <div class="modal-content" style="border:none;border-radius:0;">
@@ -237,12 +346,11 @@
               <h3>Parti pour les 7 Merveilles du Peuple Gabonais</h3>
               <h2>Fiche d'adhésion (commune)</h2>
             </div>
-            <div class="fp-photo" id="fpPhotoBox">
-              <div class="fp-photo-ph" id="fpPhotoPh"><i class="fas fa-user"></i>Pas de photo</div>
+            <div class="fp-photo">
+              <div class="fp-photo-ph" id="fpPhotoPh">Pas de photo</div>
               <img id="fpPhotoImg" src="" alt="" style="display:none;"/>
             </div>
           </div>
-
           <div class="fp-section">
             <div class="fp-section-title"><h4>Identification civique de l'adhérent</h4></div>
             <div class="fp-row">
@@ -256,7 +364,6 @@
               <div class="fp-field"><div class="fp-label">Qualité adhérent</div><div class="fp-val" id="p_qualite"></div></div>
             </div>
           </div>
-
           <div class="fp-section">
             <div class="fp-section-title"><h4>Localisation territoriale politique</h4></div>
             <div class="fp-row">
@@ -266,22 +373,19 @@
               <div class="fp-field"><div class="fp-label">Centre / Bureau de vote</div><div class="fp-val" id="p_centre_vote"></div></div>
             </div>
           </div>
-
           <div class="fp-section">
             <div class="fp-section-title"><h4>Contacts</h4></div>
             <div class="fp-row">
               <div class="fp-field"><div class="fp-label">Téléphone</div><div class="fp-val" id="p_telephone"></div></div>
               <div class="fp-field"><div class="fp-label">Email</div><div class="fp-val" id="p_email"></div></div>
-              <div class="fp-field full"><div class="fp-label">Adresse (BP, ville/quartier)</div><div class="fp-val" id="p_adresse"></div></div>
+              <div class="fp-field full"><div class="fp-label">Adresse</div><div class="fp-val" id="p_adresse"></div></div>
             </div>
           </div>
-
           <div class="fp-date">
             <strong>Date d'adhésion :</strong> <span id="p_date_adhesion"></span>
             &nbsp;&nbsp;&nbsp;
             <strong>Enregistré le :</strong> <span id="p_date_enregistrement"></span>
           </div>
-
           <div class="fp-sigs">
             <div class="fp-sig">
               <div class="fp-sig-title">Le Secrétaire Général</div>
@@ -401,37 +505,45 @@
 
   let adherentActif = null;
 
+  function remplirFiche(prefix, a) {
+    const set = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val || '—'; };
+    set(prefix+'noms', a.noms);
+    set(prefix+'prenoms', a.prenoms);
+    set(prefix+'date_naissance', a.date_naissance);
+    set(prefix+'lieu_naissance', a.lieu_naissance);
+    set(prefix+'nip', a.nip);
+    set(prefix+'profession', a.profession);
+    set(prefix+'lieu_residence', a.lieu_residence);
+    set(prefix+'qualite', a.qualite);
+    set(prefix+'province', a.province);
+    set(prefix+'commune', a.commune);
+    set(prefix+'arrondissement', a.arrondissement);
+    set(prefix+'centre_vote', a.centre_vote);
+    set(prefix+'telephone', a.telephone);
+    set(prefix+'email', a.email);
+    set(prefix+'adresse', a.adresse);
+    set(prefix+'date_adhesion', a.date_adhesion);
+    set(prefix+'date_enregistrement', a.date_enregistrement);
+  }
+
   function voirFiche(id) {
     const a = adherentsData[id];
     if (!a) return;
     adherentActif = a;
 
-    const set = (eid, val) => { const el = document.getElementById(eid); if(el) el.textContent = val || '—'; };
-    set('p_noms', a.noms);
-    set('p_prenoms', a.prenoms);
-    set('p_date_naissance', a.date_naissance);
-    set('p_lieu_naissance', a.lieu_naissance);
-    set('p_nip', a.nip);
-    set('p_profession', a.profession);
-    set('p_lieu_residence', a.lieu_residence);
-    set('p_qualite', a.qualite);
-    set('p_province', a.province);
-    set('p_commune', a.commune);
-    set('p_arrondissement', a.arrondissement);
-    set('p_centre_vote', a.centre_vote);
-    set('p_telephone', a.telephone);
-    set('p_email', a.email);
-    set('p_adresse', a.adresse);
-    set('p_date_adhesion', a.date_adhesion);
-    set('p_date_enregistrement', a.date_enregistrement);
-
+    // Remplir aperçu modal
+    remplirFiche('p_', a);
     const img = document.getElementById('fpPhotoImg');
     const ph = document.getElementById('fpPhotoPh');
-    if (a.photo_url) {
-      img.src = a.photo_url; img.style.display = 'block'; ph.style.display = 'none';
-    } else {
-      img.style.display = 'none'; ph.style.display = 'block';
-    }
+    if (a.photo_url) { img.src = a.photo_url; img.style.display = 'block'; ph.style.display = 'none'; }
+    else { img.style.display = 'none'; ph.style.display = 'block'; }
+
+    // Remplir div cachée PDF
+    remplirFiche('pdf_', a);
+    const pdfImg = document.getElementById('pdf_photoImg');
+    const pdfPh = document.getElementById('pdf_photoPh');
+    if (a.photo_url) { pdfImg.src = a.photo_url; pdfImg.style.display = 'block'; pdfPh.style.display = 'none'; }
+    else { pdfImg.style.display = 'none'; pdfPh.style.display = 'block'; }
 
     new bootstrap.Modal(document.getElementById('ficheModal')).show();
   }
@@ -441,14 +553,17 @@
     btns.forEach(b => { if(b){ b.disabled=true; b.innerHTML='<i class="fas fa-spinner fa-spin me-1"></i>Génération...'; }});
 
     try {
-      const element = document.getElementById('fichePreview');
+      // Capturer la div cachée à taille fixe 794px
+      const element = document.getElementById('fichePDF');
       const canvas = await html2canvas(element, {
-        scale: 3,
+        scale: 2,
         useCORS: true,
         allowTaint: true,
         backgroundColor: '#ffffff',
         logging: false,
-        imageTimeout: 0
+        imageTimeout: 0,
+        width: 794,
+        windowWidth: 794
       });
 
       const { jsPDF } = window.jspdf;
