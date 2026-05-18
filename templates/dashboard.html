@@ -67,7 +67,7 @@
     .empty-state i { font-size:3rem; margin-bottom:16px; color:#ccc; display:block; }
 
     /* MODAL */
-    .modal-dialog-fiche { max-width:800px; }
+    .modal-dialog-fiche { max-width:760px; }
     .modal-header-custom { background:var(--vert); color:#fff; padding:16px 24px; display:flex; align-items:center; justify-content:space-between; }
     .modal-header-custom h5 { font-family:'Playfair Display',serif; font-size:1.1rem; margin:0; }
     .btn-pdf { background:var(--rouge); color:#fff; border:none; padding:10px 20px; font-weight:700; font-size:0.88rem; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:7px; }
@@ -75,31 +75,31 @@
     .btn-pdf:disabled { opacity:0.6; cursor:not-allowed; }
 
     /* FICHE PREVIEW dans modal */
-    #fichePreview { background:#fff; font-family:'Barlow',sans-serif; border-top:6px solid var(--vert); }
-    .fp-header { display:flex; align-items:center; justify-content:space-between; padding:18px 24px 14px; border-bottom:2px solid #eee; gap:12px; }
-    .fp-logo { width:85px; height:85px; object-fit:contain; flex-shrink:0; }
+    #fichePreview { background:#fff; font-family:'Barlow',sans-serif; border-top:6px solid var(--vert); width:700px; }
+    .fp-header { display:flex; align-items:center; justify-content:space-between; padding:14px 20px 12px; border-bottom:2px solid #eee; gap:10px; }
+    .fp-logo { width:80px; height:80px; object-fit:contain; flex-shrink:0; }
     .fp-title { text-align:center; flex:1; }
-    .fp-title h3 { font-family:'Barlow',sans-serif; font-size:0.82rem; font-weight:700; text-decoration:underline; margin-bottom:7px; }
-    .fp-title h2 { font-family:'Barlow',sans-serif; font-size:1.35rem; font-weight:900; }
-    .fp-photo { width:95px; min-width:85px; border:2px solid #999; display:flex; align-items:center; justify-content:center; min-height:115px; flex-shrink:0; background:#f9f9f9; overflow:hidden; }
-    .fp-photo img { width:100%; height:115px; object-fit:cover; }
-    .fp-photo-ph { text-align:center; color:#bbb; font-size:0.68rem; padding:8px; }
-    .fp-photo-ph i { font-size:1.4rem; display:block; margin-bottom:3px; }
-    .fp-section { padding:14px 24px; border-bottom:1px solid #eee; }
-    .fp-section-title { text-align:center; margin-bottom:12px; }
-    .fp-section-title h4 { font-family:'Playfair Display',serif; font-style:italic; font-size:0.95rem; font-weight:700; text-decoration:underline; display:inline-block; padding:0 10px; }
-    .fp-row { display:flex; flex-wrap:wrap; gap:0 20px; }
-    .fp-field { flex:1; min-width:180px; margin-bottom:10px; }
+    .fp-title h3 { font-family:'Barlow',sans-serif; font-size:0.78rem; font-weight:700; text-decoration:underline; margin-bottom:5px; }
+    .fp-title h2 { font-family:'Barlow',sans-serif; font-size:1.2rem; font-weight:900; }
+    .fp-photo { width:90px; min-width:90px; border:2px solid #999; display:flex; align-items:center; justify-content:center; height:110px; flex-shrink:0; background:#f9f9f9; overflow:hidden; }
+    .fp-photo img { width:100%; height:110px; object-fit:cover; }
+    .fp-photo-ph { text-align:center; color:#bbb; font-size:0.65rem; padding:6px; }
+    .fp-photo-ph i { font-size:1.3rem; display:block; margin-bottom:3px; }
+    .fp-section { padding:10px 20px; border-bottom:1px solid #eee; }
+    .fp-section-title { text-align:center; margin-bottom:8px; }
+    .fp-section-title h4 { font-family:'Playfair Display',serif; font-style:italic; font-size:0.88rem; font-weight:700; text-decoration:underline; display:inline-block; padding:0 10px; }
+    .fp-row { display:flex; flex-wrap:wrap; gap:0 16px; }
+    .fp-field { flex:1; min-width:140px; margin-bottom:8px; }
     .fp-field.full { flex:100%; min-width:100%; }
-    .fp-label { font-weight:700; font-size:0.74rem; color:#666; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:2px; }
-    .fp-val { font-size:0.9rem; color:var(--noir); border-bottom:1.5px dashed #bbb; padding-bottom:3px; min-height:20px; }
-    .fp-date { padding:10px 24px; background:var(--gris); border-top:1px solid #eee; font-size:0.85rem; }
-    .fp-sigs { display:flex; justify-content:space-between; align-items:flex-end; padding:14px 24px 18px; border-top:1px solid #eee; gap:16px; flex-wrap:wrap; }
+    .fp-label { font-weight:700; font-size:0.65rem; color:#666; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:1px; }
+    .fp-val { font-size:0.82rem; color:var(--noir); border-bottom:1.5px dashed #bbb; padding-bottom:2px; min-height:18px; }
+    .fp-date { padding:8px 20px; background:var(--gris); border-top:1px solid #eee; font-size:0.82rem; }
+    .fp-sigs { display:flex; justify-content:space-between; align-items:flex-end; padding:12px 20px 16px; border-top:1px solid #eee; gap:16px; }
     .fp-sig { text-align:center; flex:1; min-width:130px; }
-    .fp-sig-title { font-weight:700; font-size:0.88rem; margin-bottom:34px; }
+    .fp-sig-title { font-weight:700; font-size:0.85rem; margin-bottom:30px; }
     .fp-sig-line { border-top:1.5px solid #999; margin:0 14px; }
-    .fp-sig-sub { font-size:0.7rem; color:#888; margin-top:3px; }
-    .fp-case { width:24px; height:24px; border:2px solid #999; display:inline-flex; align-items:center; justify-content:center; font-size:1rem; }
+    .fp-sig-sub { font-size:0.68rem; color:#888; margin-top:3px; }
+    .fp-case { width:22px; height:22px; border:2px solid #999; display:inline-flex; align-items:center; justify-content:center; font-size:0.9rem; }
 
     .sidebar-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:199; }
     @media(max-width:768px) {
@@ -229,7 +229,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" style="filter:invert(1);"></button>
         </div>
       </div>
-      <div class="modal-body" style="padding:20px;background:#ddd;">
+      <div class="modal-body" style="padding:20px;background:#ddd;overflow-x:auto;">
         <div id="fichePreview">
           <div class="fp-header">
             <img src="{% static '7mp.png' %}" alt="7MP" class="fp-logo" onerror="this.style.display='none'"/>
@@ -460,7 +460,6 @@
       const availableW = pageW - margin * 2;
       const availableH = pageH - margin * 2;
 
-      // Calcul du ratio pour forcer tout sur une seule page
       const canvasRatio = canvas.width / canvas.height;
       const pageRatio = availableW / availableH;
 
@@ -473,7 +472,6 @@
         imgW = availableH * canvasRatio;
       }
 
-      // Centrer verticalement si la fiche est plus petite que la page
       const yOffset = margin + (availableH - imgH) / 2;
       const xOffset = margin + (availableW - imgW) / 2;
 
