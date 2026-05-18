@@ -21,19 +21,27 @@
     .fp-title h2 { font-family:'Barlow',sans-serif; font-size:1.35rem; font-weight:900; }
     .fp-photo { width:95px; min-width:85px; border:2px solid #999; display:flex; align-items:center; justify-content:center; min-height:115px; flex-shrink:0; background:#f9f9f9; overflow:hidden; }
     .fp-photo img { width:100%; height:115px; object-fit:cover; }
-    .fp-section { padding:14px 24px; border-bottom:1px solid #eee; }
-    .fp-section-title { text-align:center; margin-bottom:12px; }
+    .fp-section { padding:10px 24px; border-bottom:1px solid #eee; }
+    .fp-section-title { text-align:center; margin-bottom:10px; }
     .fp-section-title h4 { font-family:'Playfair Display',serif; font-style:italic; font-size:0.95rem; font-weight:700; text-decoration:underline; display:inline-block; padding:0 10px; }
     .fp-row { display:flex; flex-wrap:wrap; gap:0 20px; }
-    .fp-field { flex:1; min-width:180px; margin-bottom:10px; }
+    .fp-field { flex:1; min-width:180px; margin-bottom:7px; }
     .fp-label { font-weight:700; font-size:0.74rem; color:#666; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:2px; }
     .fp-val { font-size:0.9rem; color:var(--noir); border-bottom:1.5px dashed #bbb; padding-bottom:3px; min-height:20px; }
-    .fp-sigs { display:flex; justify-content:space-between; align-items:flex-end; padding:14px 24px 18px; border-top:1px solid #eee; gap:16px; flex-wrap:wrap; }
+    .fp-sigs { display:flex; justify-content:space-between; align-items:flex-end; padding:10px 24px 12px; border-top:1px solid #eee; gap:16px; flex-wrap:wrap; }
     .fp-sig { text-align:center; flex:1; min-width:130px; }
-    .fp-sig-title { font-weight:700; font-size:0.88rem; margin-bottom:34px; }
+    .fp-sig-title { font-weight:700; font-size:0.88rem; margin-bottom:22px; }
     .fp-sig-line { border-top:1.5px solid #999; margin:0 14px; }
     .fp-sig-sub { font-size:0.7rem; color:#888; margin-top:3px; }
-    @media print { .top-actions { display:none!important; } body { background:#fff; } }
+
+    @media print {
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      .top-actions { display:none !important; }
+      body { background:#fff !important; margin:0 !important; padding:0 !important; }
+      .fiche-wrapper { max-width:100% !important; margin:0 !important; padding:0 !important; }
+      .fiche-card { box-shadow:none !important; page-break-inside:avoid; }
+      @page { size:A4 portrait; margin:10mm; }
+    }
   </style>
 </head>
 <body>
