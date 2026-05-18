@@ -37,10 +37,25 @@
     @media print {
       * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
       .top-actions { display:none !important; }
-      body { background:#fff !important; margin:0 !important; padding:0 !important; }
+      html, body { background:#fff !important; margin:0 !important; padding:0 !important; height:100%; }
       .fiche-wrapper { max-width:100% !important; margin:0 !important; padding:0 !important; }
-      .fiche-card { box-shadow:none !important; page-break-inside:avoid; }
-      @page { size:A4 portrait; margin:10mm; }
+      .fiche-card { box-shadow:none !important; }
+      @page { size:A4 portrait; margin:8mm; }
+      body { font-size:11px !important; }
+      .fp-title h3 { font-size:0.7rem !important; }
+      .fp-title h2 { font-size:1.1rem !important; }
+      .fp-photo { width:80px !important; min-width:70px !important; min-height:95px !important; }
+      .fp-photo img { height:95px !important; }
+      .fp-header { padding:10px 16px 10px !important; }
+      .fp-section { padding:6px 16px !important; }
+      .fp-section-title { margin-bottom:6px !important; }
+      .fp-section-title h4 { font-size:0.82rem !important; }
+      .fp-label { font-size:0.65rem !important; }
+      .fp-val { font-size:0.78rem !important; min-height:16px !important; }
+      .fp-field { margin-bottom:4px !important; min-width:160px !important; }
+      .fp-sigs { padding:6px 16px 8px !important; }
+      .fp-sig-title { font-size:0.78rem !important; margin-bottom:16px !important; }
+      .fp-sig-sub { font-size:0.65rem !important; }
     }
   </style>
 </head>
