@@ -199,11 +199,6 @@
     }
     .step-card h5 { font-weight: 700; margin-bottom: 8px; }
     .step-card p { color: #666; font-size: 0.9rem; line-height: 1.6; }
-    .step-connector {
-      position: absolute; top: 28px; left: calc(50% + 40px);
-      width: calc(100% - 80px); height: 2px;
-      background: linear-gradient(90deg, var(--jaune), var(--vert));
-    }
 
     /* FOOTER */
     footer {
@@ -268,7 +263,7 @@
       <div class="col-lg-6 hero-content">
         <p class="hero-eyebrow"><i class="fas fa-star me-2"></i>C'est Encore Possible</p>
         <h1>Parti pour <span class="accent">Les 7 Merveilles</span> du Peuple Gabonais</h1>
-        <p>Rejoignez un Parti Politique des femmes et des hommes de valeur pour œuvrer au salut et à la restauration du Gabon.Votre adhésion c'est votre voix!!</p>
+        <p>Rejoignez un Parti Politique des femmes et des hommes de valeur pour œuvrer au salut et à la restauration du Gabon. Votre adhésion c'est votre voix !!</p>
         <div class="d-flex flex-wrap gap-3">
           <a href="/formulaire/" class="btn-hero-primary">
             <i class="fas fa-pen me-2"></i>Adhérer maintenant
@@ -325,44 +320,51 @@
     <div class="row g-4">
       <div class="col-md-6 col-lg-4">
         <div class="valeur-card">
-          <div class="valeur-icon"><i class="fas fa-balance-scale"></i></div>
-          <h5>Justice & Équité</h5>
-          <p>Nous défendons un Gabon où chaque citoyen bénéficie d'un traitement équitable et de droits égaux devant la loi.</p>
+          <div class="valeur-icon"><i class="fas fa-bible"></i></div>
+          <h5>La Conscience devant Dieu et devant l'Histoire</h5>
+          <p>L'Histoire et Dieu sont témoins de nos actes (Constitution + Hymne).</p>
         </div>
       </div>
       <div class="col-md-6 col-lg-4">
         <div class="valeur-card">
-          <div class="valeur-icon"><i class="fas fa-hand-holding-heart"></i></div>
-          <h5>Solidarité Nationale</h5>
-          <p>La force du peuple gabonais réside dans son unité. Ensemble, nous construisons un avenir meilleur pour tous.</p>
+          <div class="valeur-icon"><i class="fas fa-heart"></i></div>
+          <h5>L'Humanisme</h5>
+          <p>La dignité de la personne humaine (Constitution + Devise).</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <div class="valeur-card">
+          <div class="valeur-icon"><i class="fas fa-home"></i></div>
+          <h5>L'Épanouissement de la famille</h5>
+          <p>Un cadre familial propice (Constitution + Sceau + Devise).</p>
         </div>
       </div>
       <div class="col-md-6 col-lg-4">
         <div class="valeur-card">
           <div class="valeur-icon"><i class="fas fa-seedling"></i></div>
-          <h5>Développement Durable</h5>
-          <p>Nous œuvrons pour une croissance économique respectueuse de nos ressources naturelles et de notre environnement.</p>
+          <h5>La Recherche de la Sécurité alimentaire</h5>
+          <p>Une agriculture pour les Gabonais (Constitution + Devise + Sceau).</p>
         </div>
       </div>
       <div class="col-md-6 col-lg-4">
         <div class="valeur-card">
-          <div class="valeur-icon"><i class="fas fa-shield-alt"></i></div>
-          <h5>Intégrité & Transparence</h5>
-          <p>La bonne gouvernance est notre boussole. Nous agissons avec honnêteté et responsabilité envers le peuple.</p>
+          <div class="valeur-icon"><i class="fas fa-globe-africa"></i></div>
+          <h5>La Quête d'une nouvelle société</h5>
+          <p>On veut un Gabon plus beau et plus juste (Constitution + Devise + Hymne).</p>
         </div>
       </div>
       <div class="col-md-6 col-lg-4">
         <div class="valeur-card">
-          <div class="valeur-icon"><i class="fas fa-users"></i></div>
-          <h5>Participation Citoyenne</h5>
-          <p>Chaque Gabonais a un rôle à jouer. Nous encourageons l'engagement civique à tous les niveaux de la société.</p>
+          <div class="valeur-icon"><i class="fas fa-flag"></i></div>
+          <h5>Le Patriotisme</h5>
+          <p>L'amour pour la Patrie (Constitution + Devise + Hymne).</p>
         </div>
       </div>
       <div class="col-md-6 col-lg-4">
         <div class="valeur-card">
-          <div class="valeur-icon"><i class="fas fa-star"></i></div>
-          <h5>Excellence & Progrès</h5>
-          <p>Viser l'excellence dans tout ce que nous faisons pour hisser le Gabon au rang des nations prospères d'Afrique.</p>
+          <div class="valeur-icon"><i class="fas fa-handshake"></i></div>
+          <h5>La Diplomatie Frère</h5>
+          <p>Tous les hommes sont frères (Constitution + Hymne).</p>
         </div>
       </div>
     </div>
@@ -459,7 +461,6 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
 <script>
-  // Mobile menu toggle
   const toggleBtn = document.getElementById('menuToggle');
   const mobileMenu = document.getElementById('mobileMenu');
   toggleBtn.addEventListener('click', () => {
@@ -470,7 +471,6 @@
     }
   });
 
-  // Smooth scroll
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
       const id = a.getAttribute('href').slice(1);
