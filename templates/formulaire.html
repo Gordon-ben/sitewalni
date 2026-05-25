@@ -83,7 +83,7 @@
     .case-label { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; user-select: none; }
     .case-radio { display: none; }
     .case-box { width: 28px; height: 28px; border: 2px solid #999; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: transparent; transition: color 0.15s; }
-    .case-label input:checked ~ .case-box, .case-box.checked { color: #111; border-color: #111; }
+    .case-label input:checked ~ .case-box { color: #111; border-color: #111; }
     .case-text { font-weight: 700; font-size: 0.95rem; color: var(--noir); }
 
     .toast-custom { position: fixed; bottom: 30px; right: 30px; min-width: 300px; padding: 18px 24px; border-radius: 0; z-index: 9999; display: none; align-items: center; gap: 14px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); animation: slideIn 0.3s ease; }
@@ -92,9 +92,6 @@
     .toast-error { background: var(--rouge); color: #fff; }
     .toast-custom i { font-size: 1.4rem; }
     .toast-custom span { font-weight: 600; }
-
-    .spinner { display:inline-block; width:18px; height:18px; border:2px solid rgba(255,255,255,0.4); border-top-color:#fff; border-radius:50%; animation:spin 0.7s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
 
     @media (max-width: 576px) {
       .fiche-header { flex-direction: column; align-items: center; text-align: center; }
@@ -110,7 +107,6 @@
 </head>
 <body>
 
-<!-- NAVBAR -->
 <nav class="navbar-7mp">
   <div class="container d-flex align-items-center justify-content-between">
     <a href="/" class="d-flex align-items-center gap-2 text-decoration-none">
@@ -123,7 +119,6 @@
   </div>
 </nav>
 
-<!-- PAGE HEADER -->
 <div class="page-header">
   <div class="container">
     <h1><i class="fas fa-file-alt me-3"></i>Fiche d'Adhésion</h1>
@@ -146,7 +141,6 @@
     {% csrf_token %}
     <div class="fiche-card">
 
-      <!-- EN-TÊTE -->
       <div class="fiche-header">
         <div class="fiche-logo-zone">
           <img src="{% static '7mp.png' %}" alt="Logo 7MP" class="fiche-logo-img" onerror="this.style.display='none'"/>
@@ -167,7 +161,6 @@
         <input type="file" id="photoInput" name="photo" accept="image/*"/>
       </div>
 
-      <!-- SECTION 1 : IDENTIFICATION CIVIQUE -->
       <div class="fiche-section">
         <div class="section-header"><h4>Identification civique de l'adhérent</h4></div>
         <div class="field-group">
@@ -195,9 +188,8 @@
           </div>
         </div>
         <div class="field-group">
-          <label>Numéro d'Identification Personnel (N.I.P) <span class="req">*</span></label>
-          <input class="field-input" type="text" id="nip" name="nip" placeholder="Votre N.I.P..." required/>
-          <div class="field-error">Ce champ est obligatoire.</div>
+          <label>Numéro d'Identification Personnel (N.I.P)</label>
+          <input class="field-input" type="text" id="nip" name="nip" placeholder="Votre N.I.P..."/>
         </div>
         <div class="field-group">
           <label>Profession</label>
@@ -213,7 +205,6 @@
         </div>
       </div>
 
-      <!-- SECTION 2 : LOCALISATION TERRITORIALE -->
       <div class="fiche-section">
         <div class="section-header"><h4>Localisation territoriale politique</h4></div>
         <div class="row g-3">
@@ -255,7 +246,6 @@
         </div>
       </div>
 
-      <!-- SECTION 3 : CONTACTS -->
       <div class="fiche-section">
         <div class="section-header"><h4>Contacts</h4></div>
         <div class="field-group">
@@ -274,13 +264,11 @@
         </div>
       </div>
 
-      <!-- DATE D'ADHÉSION -->
       <div class="date-adh">
         <label>Date d'adhésion</label>
         <input class="field-input" type="date" id="dateAdh" name="date_adhesion"/>
       </div>
 
-      <!-- SIGNATURES -->
       <div class="fiche-signatures">
         <div class="signature-bloc">
           <div class="sig-title">Le Secrétaire Général</div>
@@ -307,7 +295,6 @@
         </div>
       </div>
 
-      <!-- BOUTON SUBMIT -->
       <div class="submit-zone">
         <p class="text-muted mb-3" style="font-size:0.85rem;"><i class="fas fa-info-circle me-1" style="color:var(--vert);"></i>Votre fiche sera transmise automatiquement au Secrétariat Général.</p>
         <button type="submit" class="btn-submit" id="submitBtn">
@@ -319,7 +306,6 @@
   </form>
 </div>
 
-<!-- TOAST -->
 <div class="toast-custom toast-success" id="toastSuccess">
   <i class="fas fa-check-circle"></i>
   <div>
@@ -379,12 +365,10 @@
   document.getElementById('ficheForm').addEventListener('submit', function(e) {
     let isValid = true;
 
-    // Validation champs texte
     document.querySelectorAll('.field-input').forEach(input => {
       if (!validateField(input)) isValid = false;
     });
 
-    // Validation OUI/NON obligatoire
     const accordChecked = document.querySelector('input[name="accordAdherent"]:checked');
     const erreurAccord = document.getElementById('erreurAccord');
     if (!accordChecked) {

@@ -19,15 +19,16 @@ class AdherentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Champs obligatoires
-        obligatoires = ['noms', 'prenoms', 'photo', 'nip', 'telephone']
+        obligatoires = ['noms', 'prenoms', 'telephone']
         for champ in obligatoires:
             self.fields[champ].required = True
 
         # Champs optionnels
         optionnels = [
-            'date_naissance', 'lieu_naissance', 'profession',
+            'date_naissance', 'lieu_naissance', 'nip', 'profession',
             'lieu_residence', 'qualite', 'province', 'commune',
-            'arrondissement', 'centre_vote', 'adresse', 'email', 'date_adhesion'
+            'arrondissement', 'centre_vote', 'adresse', 'email',
+            'date_adhesion', 'photo'
         ]
         for champ in optionnels:
             self.fields[champ].required = False
